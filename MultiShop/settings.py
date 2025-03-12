@@ -142,8 +142,8 @@ LOGIN_URL = '/account/login'
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = 'media/'
-MEDIA_ROOT = '/home/multishop/public_html/media'
-STATIC_ROOT = '/home/multishop/public_html/static'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
 # Default primary key field type
