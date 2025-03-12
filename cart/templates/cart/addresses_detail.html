@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class=" text-link" href="{% url 'home:main' %}">مولتی شاپ</a>
+                    <span class="breadcrumb-item mr-3 ml-3">/</span>
+                    <a class=" text-link" href="{% url 'cart:cart_detail' %}">سبد خرید</a>
+                    <span class="breadcrumb-item mr-3 ml-3">/</span>
+                    <span class="active">انتخاب ادرس</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+    <!-- Cart Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12 table-responsive">
+                <form method="POST" action="{% url 'cart:order_create' order.id %}">
+                    {% csrf_token %}
+                    <table class="table table-light table-borderless table-hover text-center mb-5">
+                        {% if request.user.addresses.all %}
+                            <div class="cart-item">
+                                <div class="cart-details">
+                                    <h5 class="font-weight-bold mb-3">انتخاب آدرس</h5>
+                                    {% for address in request.user.addresses.all %}
+                                        <div class="address-option d-flex align-items-center">
+                                            <input class="mx-2 address-radio" type="radio" name="selected_address" value="{{ address.id }}" id="address-{{ address.id }}">
+                                            <label for="address-{{ address.id }}">
+                                                <p><strong>نام دریافت کننده:</strong> {{ address.full_name }}</p>
+                                                <p><strong>شماره همراه:</strong> {{ address.phone }}</p>
+                                                <p><strong>آدرس:</strong> {{ address.address|truncatewords:10 }}</p>
+                                                <p><strong>کد پستی:</strong> {{ address.postal_code }}</p>
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <a href="{% url 'account:add_address' %}?next={% url 'cart:order_detail' order.id %}"
+                               class="btn btn-block btn-primary font-weight-bold my-3 py-3">ادرسی ندارید؟ ادرس خود را اضافه کنید</a>
+                        {% endif %}
+                    </table>
+
+                    <button id="show-address-btn" type="submit" class="btn btn-primary form-control rounded-2">انتخاب آدرس</button>
+                    <a href="{% url 'account:add_address' %}?next={% url 'cart:detail_address' %}"
+                       class="btn btn-block btn-primary font-weight-bold my-3 py-3 rounded-2">افزودن ادرس جدید</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Cart End -->
+
+{% endblock %}

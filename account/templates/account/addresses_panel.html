@@ -1,0 +1,35 @@
+{% extends 'account/user_panel.html' %}
+
+{% block panel_content %}
+
+<table class="table table-light table-borderless table-hover text-center mb-5">
+    {% if addresses %}
+        <div class="cart-item">
+            <div class="cart-details">
+                <h5 class="font-weight-bold mb-3">آدرس های شما</h5>
+                {% for address in addresses %}
+                    <div class="address-option d-flex flex-column flex-md-row align-items-center justify-content-between mb-3">
+                        <label for="address-{{ address.id }}" class="w-100 w-md-75">
+                            <p><strong>نام دریافت کننده:</strong> {{ address.full_name }}</p>
+                            <p><strong>شماره همراه:</strong> {{ address.phone }}</p>
+                            <p><strong>آدرس:</strong> {{ address.address|truncatewords:10 }}</p>
+                            <p><strong>کد پستی:</strong> {{ address.postal_code }}</p>
+                        </label>
+                        <div class="d-flex mt-3 mt-md-0">
+                            <a href="{% url 'account:delete_address' address.id %}" class="btn-sm mr-2"><i class="bi bi-trash"></i></a>
+                            <a href="{% url 'account:edit_address' address.pk %}?next={% url 'account:user_addresses' %}" class="btn btn-primary btn-sm rounded-2">ویرایش</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <a href="{% url 'account:add_address' %}?next={% url 'account:panel_addresses' %}"
+           class="btn btn-block btn-primary font-weight-bold my-3 py-3">ادرسی ندارید؟ ادرس خود را اضافه کنید</a>
+    {% endif %}
+</table>
+
+<a href="{% url 'account:add_address' %}?next={% url 'account:user_addresses' %}"
+   class="btn btn-block btn-primary font-weight-bold my-3 py-3 rounded-2">افزودن ادرس جدید</a>
+
+{% endblock %}

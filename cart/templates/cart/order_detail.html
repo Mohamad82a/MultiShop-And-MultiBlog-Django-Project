@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class=" text-link" href="{% url 'home:main' %}">مولتی شاپ</a>
+                    <span class="breadcrumb-item mr-3 ml-3">/</span>
+                    <a class=" text-link" href="{% url 'cart:cart_detail' %}">سبد خرید</a>
+                    <span class="breadcrumb-item mr-3 ml-3">/</span>
+                    <span class="active">تکمیل سفارش</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+    <!-- Cart Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+                <div class="cart-container mb-3">
+                    {% for order_item in order.order_items.all %}
+                        <div class="cart-item">
+                            <div class="cart-image">
+                                <img src="{{ order_item.product.images.all.first.image.url }}"
+                                     alt="{{ order_item.product.title }}">
+                            </div>
+                            <div class="cart-details">
+                                <h5>{{ order_item.product.title }}</h5>
+                                <p>قیمت: {{ order_item.product.discount_price|intcomma:False }} تومان</p>
+                                <p>تعداد: {{ order_item.quantity }}</p>
+                                <p>جمع: {{ order_item.price|intcomma:False }} تومان</p>
+                                {% for attribute_name, value in order_item.attribute.items %}
+                                    <p>{{ attribute_name }}: {{ value }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if messages %}
+                    <div id="alert-message">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <form method="POST" action="{% url 'cart:add_address' %}">
+                    {% csrf_token %}
+                    <table class="table table-light table-borderless table-hover text-center mb-5">
+                        {% if request.user.addresses.all %}
+                            <div class="cart-item">
+                                <div class="cart-details">
+                                    <h5 class="font-weight-bold mb-3">انتخاب آدرس</h5>
+                                    {% for address in request.user.addresses.all %}
+                                        <div class="address-option d-flex align-items-center">
+                                            <input class="mx-2 address-radio" type="radio" name="selected_address"
+                                                   value="{{ address.id }}" id="address-{{ address.id }}"
+                                                   {% if order.address.id == address.id %}checked{% endif %}>
+                                            <label for="address-{{ address.id }}">
+                                                <p><strong>نام دریافت کننده:</strong> {{ address.full_name }}</p>
+                                                <p><strong>شماره همراه:</strong> {{ address.phone }}</p>
+                                                <p><strong>آدرس:</strong> {{ address.address|truncatewords:10 }}</p>
+                                                <p><strong>کد پستی:</strong> {{ address.postal_code }}</p>
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <a href="{% url 'account:add_address' %}?next={% url 'cart:order_detail' order.id %}"
+                               class="btn btn-block btn-primary font-weight-bold my-3 py-3">ادرسی ندارید؟ ادرس خود را
+                                اضافه کنید</a>
+                        {% endif %}
+                    </table>
+
+                    <button id="show-address-btn" type="submit" class="btn btn-primary form-control rounded-2">انتخاب
+                        آدرس
+                    </button>
+                    <a href="{% url 'account:add_address' %}?next={% url 'cart:order_detail' order.id %}"
+                       class="btn btn-block btn-primary font-weight-bold my-3 py-3 rounded-2">افزودن ادرس جدید</a>
+                </form>
+
+            </div>
+            <div class="col-lg-4">
+                <form class="mb-30" action="{% url 'cart:apply_discount' order.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input type="text" name="discount" class="form-control border-0 p-4 rounded-2 ml-2"
+                               placeholder="کد تخفیفی دارید؟">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary rounded-2">اعمال کد تخفیف</button>
+                        </div>
+                    </div>
+                </form>
+                {% if order %}
+                    <form action="{% url 'cart:purchase_order' order.id %}" method="post">
+                        {% csrf_token %}
+                        <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">جزئیات سفارش</span>
+                        </h5>
+                        <div class="bg-light p-30 mb-5 rounded-2">
+                            <div class="border-bottom pb-2">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <h6>قیمت کالا ها({{ order.item_quantities }})</h6>
+                                    <h6>{{ cart.subtotal|intcomma:False }}</h6>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="font-weight-medium">تخفیف</h6>
+                                    <h6 class="font-weight-medium">{{ cart.discount|intcomma:False }}</h6>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="font-weight-medium">هزینه پست</h6>
+                                    <h6 class="font-weight-medium">{{ cart.post_price|intcomma:False }}</h6>
+                                </div>
+                            </div>
+                            <div class="pt-2">
+                                <div class="d-flex justify-content-between mt-2">
+                                    <h5>جمع سبد خرید</h5>
+                                    <h5>{{ order.total_price|intcomma:False }}</h5>
+                                </div>
+                                <button id="purchase-btn"
+                                        class="btn btn-block btn-success font-weight-bold my-3 py-3 rounded-2">پرداخت و
+                                    اتمام سفارش
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                {% else %}
+                    <p>سفارش یافت نشد</p>
+                {% endif %}
+
+
+                {#                {% if request.user.addresses.all %}#}
+                {#                    <select class="form-control" aria-label="Default select example">#}
+                {#                        <option selected>ادرس خود را انتخاب کنید</option>#}
+                {#                        {% for address in request.user.addresses.all %}#}
+                {#                            <option value="2">{{ address.address }}</option>#}
+                {#                        {% endfor %}#}
+                {#                    </select>#}
+                {#                    <a href="{% url 'account:add_address' %}?next={% url 'cart:order_detail' order.id %}"#}
+                {#                       class="btn btn-block btn-primary font-weight-bold my-3 py-3">افزودن ادرس جدید</a>#}
+                {#                {% else %}#}
+                {#                    <a href="{% url 'account:add_address' %}?next={% url 'cart:order_detail' order.id %}"#}
+                {#                       class="btn btn-block btn-primary font-weight-bold my-3 py-3">ادرسی ندارید؟ ادرس خود را اضافه#}
+                {#                        کنید</a>#}
+                {#                {% endif %}#}
+
+            </div>
+        </div>
+    </div>
+    <!-- Cart End -->
+
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class=" text-link" href="{% url 'home:main' %}">مولتی شاپ</a>
+                    <span class="breadcrumb-item mr-3 ml-3">/</span>
+                    <span class="active">سبد خرید</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+    <!-- Cart Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+{#                {% if cart %}#}
+{#                    {% for item in cart %}#}
+{#                        <table class="table table-light table-borderless table-hover text-center mb-0">#}
+{#                            <thead class="thead-dark">#}
+{#                            <tr>#}
+{#                                <th>محصول</th>#}
+{#                                <th>قیمت</th>#}
+{#                                <th>تعداد</th>#}
+{#                                <th>جمع قیمت</th>#}
+{#                                {% for attribute_name in item.attributes %}#}
+{#                                    <th>{{ attribute_name }}</th>#}
+{#                                {% endfor %}#}
+{#                                <th>حذف</th>#}
+{#                            </tr>#}
+{##}
+{#                            </thead>#}
+{#                            <tbody class="align-middle" dir="rtl">#}
+{#                            {% for item in cart %}#}
+{#                                <tr style="font-size: small">#}
+{#                                    <td class="align-middle ml-1"><img class="rounded-2"#}
+{#                                                                       src="{{ item.product.images.all.first.image.url }}"#}
+{#                                                                       alt=""#}
+{#                                                                       style="width: 50px;">{{ item.product.title }}#}
+{#                                    </td>#}
+{#                                    <td class="align-middle">{{ item.product.price|intcomma:False }}</td>#}
+{#                                    <td class="align-middle">{{ item.quantity }}</td>#}
+{#                                    <td class="align-middle">{{ item.total|intcomma:False }}</td>#}
+{#                                    {% for attribute_name, value in item.attributes.items %}#}
+{#                                        <td class="align-middle">{{ value }}</td>#}
+{#                                    {% endfor %}#}
+{#                                    <td class="align-middle"><a href='{% url 'cart:cart_delete' item.unique_id %}'><i#}
+{#                                            class="bi bi-trash"></i></a></td>#}
+                                    {#                                <td class="align-middle"><button onclick="window.location.href='{% url 'cart:cart_delete' item.unique_id %}'" class="btn btn-sm btn-danger " style="border-radius: 20px"><i class="bi bi-trash"></i></button></td>#}
+{#                                </tr>#}
+{#                            {% endfor %}#}
+{#                            </tbody>#}
+{#                        </table>#}
+{#                    {% endfor %}#}
+{#                {% endif %}#}
+
+                {% if cart %}
+                    <div class="cart-container">
+                        {% for item in cart %}
+                            <div class="cart-item">
+                                <div class="cart-image">
+                                    <img src="{{ item.product.images.all.first.image.url }}" alt="{{ item.product.title }}">
+                                </div>
+                                <div class="cart-details">
+                                    <h5>{{ item.product.title }}</h5>
+                                    <p>قیمت: {{ item.product.discount_price|intcomma:False }} تومان</p>
+                                    <p>تعداد: {{ item.quantity }}</p>
+                                    <p>جمع: {{ item.total|intcomma:False }} تومان</p>
+                                    {% for attribute_name, value in item.attributes.items %}
+                                        <p>{{ attribute_name }}: {{ value }}</p>
+                                    {% endfor %}
+                                    <a href="{% url 'cart:cart_delete' item.unique_id %}" class="delete-btn">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+            </div>
+            <div class="col-lg-4">
+                {#                <form class="mb-30" action="{% url 'cart:apply_discount' order.id %}" method="post">#}
+                {#                    {% csrf_token %}#}
+                {#                    <div class="input-group">#}
+                {#                        <input type="text" name="discount" class="form-control border-0 p-4" placeholder="کد تخفیفی دارید؟">#}
+                {#                        <div class="input-group-append">#}
+                {#                            <button type="submit" class="btn btn-primary">اعمال کد تخفیف</button>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                </form>#}
+                {% if order %}
+                    {#                    <form action="{% url 'cart:order_create' order.id  %}" method="post">#}
+                    {#                    {% csrf_token %}#}
+                    <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg-secondary pr-3">سبد خرید شما</span>
+                    </h5>
+                    <div class="bg-light p-30 mb-5">
+                        <div class="border-bottom pb-2">
+                            <div class="d-flex justify-content-between mb-3">
+                                <h6>قیمت کالا ها({{ cart.product_quantity }})</h6>
+                                <h6>{{ cart.subtotal|intcomma:False }}</h6>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <h6 class="font-weight-medium">سود شما از این خرید </h6>
+                                <h6 class="font-weight-medium">{{ cart.discount|intcomma:False }}</h6>
+                            </div>
+                        </div>
+                        <div class="pt-2">
+                            <div class="d-flex justify-content-between mt-2">
+                                <h5>جمع سبد خرید</h5>
+                                <h5>{{ cart.cart_grandtotal|intcomma:False }}</h5>
+                            </div>
+                            <a href="{% url 'cart:order_create' order.id %}"
+                               class="btn btn-block btn-primary font-weight-bold my-3 py-3 rounded-2">تایید و انتخاب ادرس</a>
+                        </div>
+                    </div>
+                    {#                </form>#}
+                {% else %}
+                    <p>سفارش یافت نشد</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Cart End -->
+
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "account/user_panel.html" %}
+
+{% block panel_content %}
+    <div class="container text-center">
+        <h2 class="my-4">آیا مطمئن هستید که می‌خواهید این آدرس را حذف کنید؟</h2>
+        <label for="address-{{ address.id }}" class="w-75">
+            <p><strong>نام دریافت کننده:</strong> {{ address.full_name }}</p>
+            <p><strong>شماره همراه:</strong> {{ address.phone }}</p>
+            <p><strong>آدرس:</strong> {{ address.address|truncatewords:10 }}</p>
+            <p><strong>کد پستی:</strong> {{ address.postal_code }}</p>
+        </label>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger rounded-2">حذف</button>
+            <a href="{% url 'account:panel_addresses' %}" class="btn btn-secondary rounded-2">لغو</a>
+        </form>
+    </div>
+{% endblock %}
