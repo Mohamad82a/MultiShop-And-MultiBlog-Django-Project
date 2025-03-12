@@ -1,0 +1,44 @@
+{% load static %}
+{% load render_partial %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    
+    {% include 'includes/head_reference.html' %}
+    {{ form.media }}
+
+</head>
+
+
+<body>
+
+<!-- Topbar -->
+{% include 'includes/toolbar.html' %}
+<!-- Topbar End -->
+
+<!-- Navbar -->
+{#{% include 'includes/navbar.html' %}#}
+{% render_partial 'product:navbar' %}
+<!-- End Navbar -->
+
+
+{% block content %}
+    <!-- Angular App Root -->
+    <app-root></app-root>
+{% endblock %}
+
+
+<!-- Footer -->
+{% include 'includes/footer.html' %}
+<!-- End Footer -->
+
+
+<!-- Footer References -->
+{% include 'includes/footer_reference.html' %}
+<!-- Footer References End -->
+
+
+
+</body>
+</html>
