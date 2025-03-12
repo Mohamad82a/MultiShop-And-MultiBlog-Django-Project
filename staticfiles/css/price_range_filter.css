@@ -1,0 +1,86 @@
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+.p-4 {
+    padding: 1.5rem !important;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}
+
+.price-input {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.price-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.price-field span {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+}
+
+.price-field input {
+    width: 120px;
+    height: 35px;
+    font-size: 14px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fff;
+    padding: 5px;
+}
+
+
+/* Change the track color */
+.custom-range {
+    width: 100%;
+    height: 5px;
+    background: #e4e4e4;
+    border-radius: 5px;
+    appearance: none;
+    cursor: pointer;
+}
+
+/* Change the filled part of the slider */
+.slider-container .price-slider {
+    background: #EF4056;
+}
+
+
+.custom-range::-webkit-slider-thumb {
+    height: 16px;
+    width: 16px;
+    background: #EF4056;
+    border-radius: 50%;
+    cursor: pointer;
+    appearance: none;
+}
+
+.custom-range::-moz-range-thumb {
+    background: #EF4056;
+}
+
+.custom-range::-ms-thumb {
+    background: #EF4056;
+}
+
+
+@media screen and (max-width: 768px) {
+    .price-input {
+        flex-direction: column;
+    }
+
+    .price-field input {
+        width: 100px;
+    }
+}
