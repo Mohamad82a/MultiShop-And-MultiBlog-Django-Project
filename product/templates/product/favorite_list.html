@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block content %}
+
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="text-link" href="{% url 'home:main' %}">مولتی شاپ</a>
+                    <span class="breadcrumb-item mr-3 ml-3">/</span>
+                    <span class="active">لیست علاقه مندی ها</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+    <!-- Shop Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <!-- Shop Product Start -->
+            <div class="col-lg-9 col-md-8">
+                <div class="row pb-3">
+                    <div class="col-12 pb-1">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div>
+                                <button class="btn btn-sm btn-light"><i class="fa fa-th-large"></i></button>
+                                <button class="btn btn-sm btn-light ml-2"><i class="fa fa-bars"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                {% if request.user.likes.all %}
+                    {% for favorite in favorites %}
+                        <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+                            <div class="product-item bg-light mb-4 rounded-2">
+                                <div class="product-img position-relative overflow-hidden rounded-2">
+                                    <img class="img-fluid w-100" src="{{ favorite.product.images.all.first.image.url }}"
+                                         alt="{{ favorite.product.slug }}">
+                                    <div class="product-action">
+                                        <a class="btn btn-outline-dark btn-square" href="{{ favorite.product.get_absolute_url }}"><i class="fa fa-shopping-cart"></i></a>
+                                        <a class="btn btn-outline-dark btn-square pt-1" href="{% url 'product:remove_favorite' favorite.product.id %}"><i class="bi bi-trash"></i></a>
+                                    </div>
+                                </div>
+
+                                <div class="text-center py-4">
+                                    <a class="h6 text-decoration-none text-truncate text-wrap p-3"
+                                       href="{{ favorite.product.get_absolute_url }}">{{ favorite.product.title }}</a>
+                                    {% if product.discount != 0 %}
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <h5>{{ favorite.product.discount_price|intcomma:False }}</h5>
+                                            <span class="mr-1 ml-1 toman">تومان</span>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <h6 class="text-muted ml-2 mr-2">
+                                                <del><span>{{ favorite.product.price|intcomma:False }}</span>
+                                                    <span class="mr-1 ml-1 toman">تومان</span>
+                                                </del>
+                                            </h6>
+                                        </div>
+                                    {% else %}
+                                        <div class="d-flex align-items-center justify-content-center">
+                                            <h5>{{ favorite.product.price|intcomma:False }}</h5>
+                                            <span class="mr-1 ml-1 toman">تومان</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col">
+                        <span class="p-30">لیست مورد علاقه شما خالی است</span>
+                    </div>
+                {% endif %}
+
+                    <div class="col-12">
+                        <nav>
+                            {% if pages.has_other_pages %}
+                                <ul class="pagination justify-content-center ">
+                                    {% if pages.has_previous %}
+                                        <li class="page-item ml-1"><a class="page-link rounded" href="?pag{{ pages.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.items_per_page %}&items_per_page={{ request.GET.items_per_page }}{% endif %}"><i
+                                                class="fa fa-angle-right "></i></a>
+                                        </li>
+                                    {% endif %}
+
+                                    {% for i in pages.paginator.page_range %}
+                                        {% if pages.number == i %}
+                                            <li class="page-item active mr-1 ml-1"><a class="page-link rounded" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.items_per_page %}&items_per_page={{ request.GET.items_per_page }}{% endif %}">{{ i }}</a>
+                                            </li>
+                                        {% else %}
+                                            <li><a class="page-link rounded mr-1 ml-1" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.items_per_page %}&items_per_page={{ request.GET.items_per_page }}{% endif %}">{{ i }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% if pages.has_next %}
+                                        <li class="page-item mr-1"><a class="page-link rounded" href="?page={{ pages.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}{% if request.GET.items_per_page %}&items_per_page={{ request.GET.items_per_page }}{% endif %}"><i
+                                                class="fa fa-angle-left "></i></a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            {% endif %}
+                        </nav>
+                    </div>
+                    </div>
+                </div>
+                <!-- Shop Product End -->
+            </div>
+        </div>
+    </div>
+    <!-- Shop End -->
+
+
+{% endblock %}

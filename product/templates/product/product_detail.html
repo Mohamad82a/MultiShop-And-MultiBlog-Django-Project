@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="text-link" href="{% url 'home:main' %}">مولتی شاپ</a>
+                    <span class="breadcrumb-item mr-3 ml-3">/</span>
+                    <a class="text-link"
+                       href="{% url 'product:category_detail' product.category.slug %}">{{ product.category.title }}</a>
+                    <span class="breadcrumb-item mr-3 ml-3">/</span>
+                    {% if product.subcategory %}
+                        <a class="text-link"
+                           href="{% url 'product:category_detail' product.subcategory.slug %}">{{ product.subcategory.title }}</a>
+                        <span class="breadcrumb-item mr-3 ml-3">/</span>
+                    {% endif %}
+                    <span class="active">{{ product.title }}</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+    <!-- Shop Detail Start -->
+    <div class="container-fluid pb-5">
+        <div class="container-fluid pb-5">
+            <div class="row px-xl-5">
+                <div class="col-lg-7 h-auto mb-30">
+                    <div class="h-100 bg-light p-30 rounded-2">
+                        <h3>{{ product.title }}</h3>
+                        <div class="d-flex align-items-center">
+                            {% if product.status == 'available' %}
+                                <i class="bi bi-check text-success"></i>
+                                <span class="text-success">{{ product.get_status_display }}</span>
+                            {% elif product.status == 'unavailabe' %}
+                                <i class="bi bi-x text-danger fs"></i>
+                                <span class="text-danger">{{ product.get_status_display }}</span>
+                            {% endif %}
+                            {% if product.subcategory %}
+                                <span class="mr-5">دسته بندی : {{ product.category }} / {{ product.subcategory }}</span>
+                            {% else %}
+                                <span class="mr-5">دسته بندی : {{ product.category }}</span>
+                            {% endif %}
+                        </div>
+                        <p class="mb-4" style="text-align: right">{{ product.description|safe }}</p>
+                        <form action="{% url 'cart:cart_add' product.id %}" method="post">
+                            {% csrf_token %}
+                            <div class="d-flex-2 mb-3 flex-column">
+                                {% for attribute_name, values in grouped_attributes.items %}
+                                    <div class="attribute-group mb-2">
+                                        <strong class="text-dark-2 mt-4 mb-4 h6 font-weight-bold">{{ attribute_name }}:</strong>
+                                        <div class="values d-flex">
+                                            {% for value in values %}
+                                                <div class="custom-control custom-radio custom-control-inline">
+                                                    <input type="radio" class="custom-control-input" id="{{ value }}"
+                                                           name="{{ attribute_name }}" value="{{ value }}">
+                                                    <label class="custom-control-label"
+                                                           for="{{ value }}">{{ value }}</label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+
+                            <div class="d-flex align-items-center mb-4 pt-2">
+                                {% if product.discount != 0 %}
+                                    <div class="d-flex align-items-center justify-content-center mt-2">
+                                        <h4>{{ product.discount_price|intcomma:False }}</h4>
+                                        <h4 class="mr-1 ml-1">تومان</h4>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-center mt-2">
+                                        <h6 class="text-muted ml-2 mr-2">
+                                            <del><h5>{{ product.price|intcomma:False }}</h5></del>
+                                        </h6>
+                                        <h5 class="mr-1 ml-1 ">تومان</h5>
+                                    </div>
+                                {% else %}
+                                    <div class="d-flex align-items-center justify-content-center mt-2">
+                                        <h4>{{ product.price|intcomma:False }}</h4>
+                                        <h4 class="mr-1 ml-1">تومان</h4>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex align-items-center mb-4 pt-2">
+                                {#                                <div class="h-100 bg-light p-30">#}
+                                {#                                    <h4 class="font-weight-semi-bold mb-4 mt-4">{{ product.price|intcomma:False }}</h4>#}
+                                {#                                </div>#}
+                                <div class="input-group quantity mr-2" style="width: 130px;">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary rounded btn-minus">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input name="quantity"
+                                           class="form-control bg-secondary border-0 text-center rounded mr-1 ml-1"
+                                           value="1">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary rounded btn-plus">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary px-3 mr-4 rounded"><i
+                                        class="fa fa-shopping-cart mr-1"></i>افزودن به سبد خرید
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-5 mb-30">
+                    <div id="product-carousel" class="carousel slide" data-ride="carousel">
+                        <div class="carousel-inner bg-light rounded-2">
+                            {% for image in product.images.all %}
+                                <div class="carousel-item  {% if forloop.first %}active{% endif %}">
+                                    <img class="w-100 h-100 rounded-2" src="{{ image.image.url }}" alt="Image">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+                            <i class="fa fa-2x fa-angle-left text-dark-2"></i>
+                        </a>
+                        <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+                            <i class="fa fa-2x fa-angle-right text-dark-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row px-xl-5" dir="rtl">
+                <div class="col">
+                    <div class="bg-light p-30 rounded-2">
+                        <div class="nav nav-tabs mb-4">
+                            <a class="nav-item nav-link text-dark-2 active" data-toggle="tab"
+                               href="#tab-pane-1">مشخصات</a>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane fade show active" id="tab-pane-1">
+                                <h4 class="mb-3">مشخصات فنی</h4>
+                                {% for spec in product.spec.all %}
+                                    <p>{{ spec.text|safe }}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Shop Detail End -->
+
+
+        <!-- Products Start -->
+        {#        <div class="container-fluid py-5">#}
+        {#            <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4"><span class="bg-secondary pr-3">You May Also Like</span>#}
+        {#            </h2>#}
+        {#            <div class="row px-xl-5">#}
+        {#                <div class="col">#}
+        {#                    <div class="owl-carousel related-carousel">#}
+        {#                        <div class="product-item bg-light">#}
+        {#                            <div class="product-img position-relative overflow-hidden">#}
+        {#                                <img class="img-fluid w-100" src="{% static 'img/product-1.jpg' %}" alt="">#}
+        {#                                <div class="product-action">#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i#}
+        {#                                            class="fa fa-shopping-cart"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i#}
+        {#                                            class="fa fa-sync-alt"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>#}
+        {#                                </div>#}
+        {#                            </div>#}
+        {#                            <div class="text-center py-4">#}
+        {#                                <a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>#}
+        {#                                <div class="d-flex align-items-center justify-content-center mt-2">#}
+        {#                                    <h5>$123.00</h5>#}
+        {#                                    <h6 class="text-muted ml-2">#}
+        {#                                        <del>$123.00</del>#}
+        {#                                    </h6>#}
+        {#                                </div>#}
+        {##}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                        <div class="product-item bg-light">#}
+        {#                            <div class="product-img position-relative overflow-hidden">#}
+        {#                                <img class="img-fluid w-100" src="{% static 'img/product-2.jpg' %}" alt="">#}
+        {#                                <div class="product-action">#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i#}
+        {#                                            class="fa fa-shopping-cart"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i#}
+        {#                                            class="fa fa-sync-alt"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>#}
+        {#                                </div>#}
+        {#                            </div>#}
+        {#                            <div class="text-center py-4">#}
+        {#                                <a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>#}
+        {#                                <div class="d-flex align-items-center justify-content-center mt-2">#}
+        {#                                    <h5>$123.00</h5>#}
+        {#                                    <h6 class="text-muted ml-2">#}
+        {#                                        <del>$123.00</del>#}
+        {#                                    </h6>#}
+        {#                                </div>#}
+        {##}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                        <div class="product-item bg-light">#}
+        {#                            <div class="product-img position-relative overflow-hidden">#}
+        {#                                <img class="img-fluid w-100" src="{% static 'img/product-3.jpg' %}" alt="">#}
+        {#                                <div class="product-action">#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i#}
+        {#                                            class="fa fa-shopping-cart"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i#}
+        {#                                            class="fa fa-sync-alt"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>#}
+        {#                                </div>#}
+        {#                            </div>#}
+        {#                            <div class="text-center py-4">#}
+        {#                                <a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>#}
+        {#                                <div class="d-flex align-items-center justify-content-center mt-2">#}
+        {#                                    <h5>$123.00</h5>#}
+        {#                                    <h6 class="text-muted ml-2">#}
+        {#                                        <del>$123.00</del>#}
+        {#                                    </h6>#}
+        {#                                </div>#}
+        {##}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                        <div class="product-item bg-light">#}
+        {#                            <div class="product-img position-relative overflow-hidden">#}
+        {#                                <img class="img-fluid w-100" src="{% static 'img/product-4.jpg' %}" alt="">#}
+        {#                                <div class="product-action">#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i#}
+        {#                                            class="fa fa-shopping-cart"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i#}
+        {#                                            class="fa fa-sync-alt"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>#}
+        {#                                </div>#}
+        {#                            </div>#}
+        {#                            <div class="text-center py-4">#}
+        {#                                <a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>#}
+        {#                                <div class="d-flex align-items-center justify-content-center mt-2">#}
+        {#                                    <h5>$123.00</h5>#}
+        {#                                    <h6 class="text-muted ml-2">#}
+        {#                                        <del>$123.00</del>#}
+        {#                                    </h6>#}
+        {#                                </div>#}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                        <div class="product-item bg-light">#}
+        {#                            <div class="product-img position-relative overflow-hidden">#}
+        {#                                <img class="img-fluid w-100" src="{% static 'img/product-5.jpg' %}" alt="">#}
+        {#                                <div class="product-action">#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i#}
+        {#                                            class="fa fa-shopping-cart"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i class="far fa-heart"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i#}
+        {#                                            class="fa fa-sync-alt"></i></a>#}
+        {#                                    <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>#}
+        {#                                </div>#}
+        {#                            </div>#}
+        {#                            <div class="text-center py-4">#}
+        {#                                <a class="h6 text-decoration-none text-truncate" href="">Product Name Goes Here</a>#}
+        {#                                <div class="d-flex align-items-center justify-content-center mt-2">#}
+        {#                                    <h5>$123.00</h5>#}
+        {#                                    <h6 class="text-muted ml-2">#}
+        {#                                        <del>$123.00</del>#}
+        {#                                    </h6>#}
+        {#                                </div>#}
+        {##}
+        {#                            </div>#}
+        {#                        </div>#}
+        {#                    </div>#}
+        {#                </div>#}
+        {#            </div>#}
+        {#        </div>#}
+    </div>
+    <!-- Products End -->
+
+{% endblock %}
