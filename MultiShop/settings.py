@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-qlz6kkow!16p500l!=a-2#fr3jgbe7(^+0p41h$9$%a09$p0#f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [https://multishop-fkju.onrender.com/]
 
