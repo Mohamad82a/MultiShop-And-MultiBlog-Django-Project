@@ -1,0 +1,400 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+
+
+    <!-- Carousel Start -->
+    <div class="container-fluid mb-3">
+        <div class="row justify-content-center px-xl-5">
+            <div class="col-12">
+                <div id="header-carousel" class="carousel slide carousel-fade mb-3" data-ride="carousel">
+                    <ol class="carousel-indicators">
+                        {% for offer in offers %}
+                            <li data-target="#header-carousel" data-slide-to="{{ forloop.counter0 }}"
+                                class="{% if forloop.first %}active{% endif %}"></li>
+                        {% endfor %}
+                    </ol>
+                    <div class="carousel-inner">
+                        {% for offer in offers %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img class="w-100 d-block rounded-3" src="{{ offer.image.url }}"
+                                     style="height: auto; max-height: 430px; object-fit: cover;">
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#header-carousel" role="button" data-slide="prev">
+                        <i class="fa fa-2x fa-angle-left text-dark-2"></i>
+                    </a>
+                    <a class="carousel-control-next" href="#header-carousel" role="button" data-slide="next">
+                        <i class="fa fa-2x fa-angle-right text-dark-2"></i>
+                    </a>
+                </div>
+            </div>
+             <div class="col-12">
+                <div class="row g-2 justify-content-center">
+                    {% for side_offer in side_offers %}
+                        <div class="col-md-4 col-12 px-2">
+                            <div class="product-offer mb-2" style="height: 180px;">
+                                <img class="img-fluid rounded-3" src="{{ side_offer.image.url }}" alt="" style="object-fit: fill; height: 100%; width: 100%">
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Carousel End -->
+
+
+
+    <!-- Categories Start -->
+    <div class="container-fluid pt-5">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4 text-center"><span
+                class="bg-secondary pr-3">دسته بندی های محصولات</span>
+        </h2>
+        <div class="row px-xl-5 pb-3">
+            {% for category in categories %}
+                <div class="col-lg-2_4 col-md-4 col-sm-6 pb-1">
+                    <a class="text-decoration-none" href="{% url 'product:category_detail' category.slug %}">
+                        <div class="cat-item d-flex flex-column align-items-center text-center mb-4 rounded-2">
+                            <img class="img-fluid-2 mx-auto d-block" src="{{ category.image.url }}"
+                                 alt="{{ category.title }}">
+                            <div class="flex-fill pr-2">
+                                <h6 class="mt-2">{{ category.title }}</h6>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Categories End -->
+
+
+    <!-- First Products Start -->
+    <div class="container-fluid pt-4 pb-4">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4 text-center">
+            <span class="bg-secondary pr-3">گوشی اپل</span>
+        </h2>
+
+        <div class="row px-xl-5 bg-image pt-4 pb-4 d-flex align-items-center">
+
+            <!-- Products on the left -->
+            <div class="col-lg-9 col-md-8 col-sm-12 d-flex flex-wrap justify-content-start">
+                {% for product in mobiles|slice:"3:7" %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                        <div class="product-item bg-light mb-2 rounded-2 p-1" style="max-width: 100%; max-height:340px">
+                            <div class="product-img position-relative overflow-hidden rounded-2">
+                                <img class="img-fluid w-100 h-auto d-block mx-auto"
+                                     src="{{ product.images.all.first.image.url }}"
+                                     alt="{{ product.slug }}" style="object-fit: cover;">
+                                <div class="product-action">
+                                    <a class="btn btn-outline-dark btn-square"
+                                       href="{% url 'product:product_detail' product.id product.slug %}">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </a>
+                                    <a class="btn btn-outline-dark btn-square"
+                                       href="{% url 'product:add_favorite' product.id %}">
+                                        <i class="far fa-heart"></i>
+                                    </a>
+                                    <a class="btn btn-outline-dark btn-square" href="">
+                                        <i class="fa fa-sync-alt"></i>
+                                    </a>
+                                    <a class="btn btn-outline-dark btn-square" href="">
+                                        <i class="fa fa-search"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="text-center py-1">
+                                <a class="h6 text-decoration-none text-truncate text-wrap p-1"
+                                   href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                                {% if product.discount != 0 %}
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <h6>{{ product.discount_price|intcomma:False }}</h6>
+                                        <span class="mr-1 ml-1 toman">تومان</span>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="btn-danger rounded px-1">
+                                            <span class="">{{ product.discount_percentage }}%</span>
+                                        </div>
+                                        <h6 class="text-muted ml-2 mr-2">
+                                            <del>
+                                                <span>{{ product.price|intcomma:False }}</span>
+                                                <span class="mr-1 ml-1 toman">تومان</span>
+                                            </del>
+                                        </h6>
+                                    </div>
+                                {% else %}
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <h6>{{ product.price|intcomma:False }}</h6>
+                                        <span class="mr-1 ml-1 toman">تومان</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <a class="carousel-control-next position-absolute d-none d-lg-block" href="" data-slide="next"
+                   style="right: -4rem; top: 62%; transform: translateY(-50%);">
+                    <i class="fa fa-2x fa-angle-right text-light"></i>
+                </a>
+            </div>
+
+            <!-- Image on the right -->
+            <div class="col-lg-3 col-md-4 col-sm-12 pb-1 text-center text-md-right">
+                <img class="img-fluid" src="{% static 'img/Untitled-5.png' %}" alt="Product Image"
+                     style="max-width: 280px; height: auto;">
+            </div>
+
+        </div>
+    </div>
+    <!-- First Products End -->
+
+
+    <!-- Offer Start -->
+    <div class="container-fluid pt-5 pb-3">
+        <div class="row px-2">
+            <!-- First Image -->
+            <div class="col-md-6 px-2 rounded-3">
+                <div class="product-offer mb-30 position-relative overflow-hidden"
+                     style="height: 220px; border-radius: 10px;">
+                    <img class="img-fluid w-100 h-100 rounded-3" src="{% static 'img/Untitled-63477-min.jpg' %}"
+                         alt="" style="object-fit: cover; height: 100%; width: 100%; border-radius: 10px;">
+                    <div class="offer-text position-absolute top-50 start-50 translate-middle text-center rounded h-65">
+                        <h6 class="text-white text-uppercase">تخفیف تا <span class="h4 text-white"
+                                                                             style="font-family: 'Sans Serif Collection'">20%</span>
+                        </h6>
+                        <h3 class="text-white">Special Offer</h3>
+                        <a href="" class="btn btn-primary rounded">اکنون بخرید</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Second Image -->
+            <div class="col-md-6 px-2 rounded-3">
+                <div class="product-offer mb-30 position-relative overflow-hidden" style="height: 220px;">
+                    <img class="img-fluid w-100 h-100 rounded-3" src="{% static 'img/Untitled-674-min_1.jpg' %}"
+                         alt="" style="height:auto;width:100%;object-fit: cover;">
+                    <div class="offer-text position-absolute top-50 start-50 translate-middle text-center rounded h-65">
+                        <h6 class="text-white text-uppercase">تخفیف تا <span class="h4 text-white"
+                                                                             style="font-family: 'Sans Serif Collection'">20%</span>
+                        </h6>
+                        <h3 class="text-white">Special Offer</h3>
+                        <a href="" class="btn btn-primary rounded">اکنون بخرید</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offer End -->
+
+    <!-- Second Products Start -->
+    <div class="container-fluid pt-4 pb-4">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4 text-center">
+            <span class="bg-secondary pr-3">لپتاپ</span>
+        </h2>
+
+        <div class="row px-xl-5 bg-image-2 pt-4 pb-4 d-flex align-items-center">
+            <!-- Image on the right -->
+            <div class="col-lg-3 col-md-4 col-sm-12 pb-1 text-center text-md-right">
+                <img class="img-fluid" src="{% static 'img/Untitled-6.png' %}" alt="Product Image"
+                     style="max-width: 280px; height: auto;">
+            </div>
+
+            <!-- Products on the left -->
+            <div class="col-lg-9 col-md-8 col-sm-12 d-flex flex-wrap justify-content-start position-relative">
+                <!-- Left Arrow Button -->
+                <a class="carousel-control-prev position-absolute d-none d-lg-block" href="" data-slide="prev"
+                   style="left: -4rem; top: 62%; transform: translateY(-50%);">
+                    <i class="fa fa-2x fa-angle-left text-light"></i>
+                </a>
+
+                {% for product in mobiles|slice:":4" %}
+                    <div class="col-lg-3 col-md-4 col-sm-6 pb-1">
+                        <div class="product-item bg-light mb-2 rounded-2 p-1" style="max-width: 100%; max-height:340px">
+                            <div class="product-img position-relative overflow-hidden rounded-2">
+                                <img class="img-fluid w-100 h-auto d-block mx-auto"
+                                     src="{{ product.images.all.first.image.url }}"
+                                     alt="{{ product.slug }}" style="object-fit: cover;">
+                                <div class="product-action">
+                                    <a class="btn btn-outline-dark btn-square"
+                                       href="{% url 'product:product_detail' product.id product.slug %}">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </a>
+                                    <a class="btn btn-outline-dark btn-square"
+                                       href="{% url 'product:add_favorite' product.id %}">
+                                        <i class="far fa-heart"></i>
+                                    </a>
+                                    <a class="btn btn-outline-dark btn-square" href="">
+                                        <i class="fa fa-sync-alt"></i>
+                                    </a>
+                                    <a class="btn btn-outline-dark btn-square" href="">
+                                        <i class="fa fa-search"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="text-center py-1">
+                                <a class="h6 text-decoration-none text-truncate text-wrap p-1"
+                                   href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                                {% if product.discount != 0 %}
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <h6 class="font-weight-bolder">{{ product.discount_price|intcomma:False }}</h6>
+                                        <span class="mr-1 ml-1 toman">تومان</span>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <div class="btn-danger rounded px-1">
+                                            <span>{{ product.discount_percentage }}%</span>
+                                        </div>
+                                        <h6 class="text-muted ml-2 mr-2">
+                                            <del>
+                                                <span>{{ product.price|intcomma:False }}</span>
+                                                <span class="mr-1 ml-1 toman">تومان</span>
+                                            </del>
+                                        </h6>
+                                    </div>
+                                {% else %}
+                                    <div class="d-flex align-items-center justify-content-center">
+                                        <h6 class="font-weight-bolder">{{ product.price|intcomma:False }}</h6>
+                                        <span class="mr-1 ml-1 toman">تومان</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- Second Products End -->
+
+
+    <!-- Products Start -->
+    <div class="container-fluid pl-4 pt-5 pb-3">
+        <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4 text-center"><span
+                class="bg-secondary pr-3">تخفیف ویژه</span></h2>
+        {% if messages %}
+            <div id="alert-message">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <div class="row px-xl-5 bg-border pt-5 pb-5 rounded-3">
+            <div class="d-flex w-100 mb-4">
+                <div class="text-white bg-primary-2 text-uppercase p-3 rounded-2 w-100 d-flex justify-content-between align-items-center">
+                    <span class="fw-bold text-white h4">مولتی آف</span>
+                    <a href="{% url 'home:best_offers_list' %}"
+                       class="text-white text-decoration-none d-flex align-items-center fw-bold">
+                        نمایش همه <i class="fa fa-angle-left me-2"></i>
+                    </a>
+                </div>
+            </div>
+            {% for product in best_offers|slice:":4" %}
+                <div class="col-lg-3 col-md-4 col-sm-6 pb-3">
+                    <div class="product-item bg-light mb-4 bg-border rounded-2">
+                        <div class="product-img position-relative overflow-hidden rounded-2">
+                            <img class="img-fluid w-75 h-75" src="{{ product.images.all.first.image.url }}"
+                                 alt="{{ product.slug }}" style="object-fit: cover">
+                            <div class="product-action">
+                                <a class="btn btn-outline-dark btn-square"
+                                   href="{% url 'product:product_detail' product.id product.slug %}"><i
+                                        class="fa fa-shopping-cart"></i></a>
+                                <a class="btn btn-outline-dark btn-square"
+                                   href="{% url 'product:add_favorite' product.id %}"><i class="far fa-heart"></i></a>
+                                <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-sync-alt"></i></a>
+                                <a class="btn btn-outline-dark btn-square" href=""><i class="fa fa-search"></i></a>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <a class="h6 text-decoration-none text-truncate text-wrap p-3"
+                               href="{{ product.get_absolute_url }}">{{ product.title }}</a>
+                            {% if product.discount != 0 %}
+                                <div class="d-flex align-items-start justify-content-center">
+                                    <div class="btn-danger rounded ml-4 pl-2 pr-2 justify-content-start"><span
+                                            class="">{{ product.discount_percentage }}%</span>
+                                    </div>
+                                    <h5>{{ product.discount_price|intcomma:False }}</h5>
+                                    <span class="mr-1 toman">تومان</span>
+
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <h6 class="text-muted ml-4 mr-2 pb-2">
+                                        <del><span>{{ product.price|intcomma:False }}</span>
+                                            <span class="mr-1 ml-1 toman">تومان</span>
+                                        </del>
+                                    </h6>
+                                </div>
+                            {% else %}
+                                <div class="d-flex align-items-center justify-content-center">
+                                    <h5>{{ product.price|intcomma:False }}</h5>
+                                    <span class="mr-1 ml-1 toman">تومان</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Products End -->
+
+
+    <!-- Vendor Start -->
+    <div id="gallery" class="carousel slide carousel-fade" data-ride="carousel" data-aos="fade-up" data-aos-delay="300">
+        <ul class="carousel-indicators">
+            <li data-target="#gallery" data-slide-to="0" class="active"></li>
+            <li data-target="#gallery" data-slide-to="1"></li>
+            <li data-target="#gallery" data-slide-to="2"></li>
+        </ul>
+
+        <div class="carousel-inner">
+            {% for img in carousel %}
+                <div class="carousel-item active" data-interval="100">
+
+                    <img src="{{ img.Image.url }}" class="d-block  w-100" alt="...">
+                    <div class="carousel-caption d-none d-md-block rounded position-absolute bg-custom">
+                        <h5>{{ img.Img_title }}</h5>
+                        <p>{{ img.Img_desc }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- Vendor End -->
+
+    <!-- Featured Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="row align-items-center mb-4 text-center" style="padding: 30px;">
+                    <img src="{% static 'img/express-delivery.svg' %}" class="index-icon m-0 mr-3">
+                    <span class="font-weight-semi-bold m-0">امکان تحویل اکسپرس</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="row align-items-center mb-4 text-center" style="padding: 30px;">
+                    <img src="{% static 'img/cash-on-delivery.svg' %}" class="index-icon m-0 mr-3">
+                    <span class="font-weight-semi-bold m-0">امکان پرداخت در محل</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="row align-items-center mb-4 text-center" style="padding: 30px;">
+                    <img src="{% static 'img/days-return.svg' %}" class="index-icon m-0 mr-3">
+                    <span class="font-weight-semi-bold m-0">7 روز ضمانت بازگشت کالا</span>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="row align-items-center mb-4 text-center" style="padding: 30px;">
+                    <img src="{% static 'img/support.svg' %}" class="index-icon m-0 mr-3">
+                    <span class="font-weight-semi-bold m-0">7 روز هفته، 24 ساعته</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Featured End -->
+
+{% endblock %}
