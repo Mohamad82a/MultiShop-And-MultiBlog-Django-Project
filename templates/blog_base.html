@@ -1,0 +1,52 @@
+{% load render_partial %}
+
+<!DOCTYPE html>
+<html lang="fr" dir="rtl">
+
+<head>
+{% include 'includes/blog_head_reference.html' %}
+</head>
+
+<body>
+
+<!-- ***** Preloader Start ***** -->
+{#    <div id="preloader">#}
+{#        <div class="jumper">#}
+{#            <div></div>#}
+{#            <div></div>#}
+{#            <div></div>#}
+{#        </div>#}
+{#    </div>  #}
+<!-- ***** Preloader End ***** -->
+
+<!-- Header -->
+<!-- Topbar -->
+{#{% include 'includes/topbar.html' %}#}
+<!-- Topbar End -->
+
+<!-- Navbar -->
+{% render_partial 'blog:navbar' %}
+<!-- End Navbar -->
+<!-- Header End -->
+
+
+{% block blog_content %}
+
+
+
+{% endblock %}
+
+
+
+<footer>
+<!-- Footer -->
+{% include 'includes/blog_footer.html' %}
+<!-- End Footer -->
+</footer>
+
+<!-- Footer References -->
+{% include 'includes/blog_footer_reference.html' %}
+<!-- Footer References End -->
+
+</body>
+</html>

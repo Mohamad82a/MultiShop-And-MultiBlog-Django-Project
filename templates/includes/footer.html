@@ -1,0 +1,114 @@
+{% load static %}
+
+
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-secondary mt-5 pt-5 footer-round">
+    <div class="row px-xl-5 pt-5">
+        <div class="col-12 d-flex align-items-center justify-content-between flex-wrap text-right">
+            {% for info in infos %}
+                <div class="mb-4 mt-4 ml-3">
+                    <p class="mb-2">
+                        <i class="fa fa-phone-alt text-primary ml-3"></i>
+                        <span style="direction: ltr; unicode-bidi: embed; display: inline-block;">{{ info.phone }}</span>
+                    </p>
+                    <p class="mb-2"><i class="fa fa-envelope text-primary ml-3"></i>{{ info.email }}</p>
+                    <p class="mb-0"><i class="fa fa-map-marker-alt text-primary ml-3"></i>{{ info.address }}</p>
+                </div>
+            {% endfor %}
+
+            <div class="flex-column align-items-center">
+                <h5 class="text-secondary text-uppercase mb-4 mt-3 ml-3">با ما همراه باشید!</h5>
+                <div class="d-flex">
+                    <a class="btn btn-primary btn-square ml-2 rounded-2" href="#"><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-primary btn-square ml-2 rounded-2" href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-primary btn-square ml-2 rounded-2" href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn btn-primary btn-square ml-2 rounded-2" href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+
+            <div class="flex-column align-items-center">
+                <h6 class="text-secondary text-uppercase mb-4 mt-4 ml-3">با ثبت ایمیل، از جدید‌ترین تخفیف‌ها با‌خبر
+                    شوید!</h6>
+                <form action="" class="d-flex">
+                    <input type="text" class="form-control rounded ml-2" placeholder="ایمیل شما">
+                    <button class="btn btn-primary rounded">ثبت</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-12 mt-5">
+            <div class="row text-right justify-content-between gap-3">
+                {#                <div class="col-md-4 mb-3">#}
+                {#                    <h5 class="text-secondary text-uppercase mb-5">دسترسی سریع</h5>#}
+                {#                    <div class="d-flex flex-column">#}
+                {#                        <a class="text-secondary mb-2" href="#">بلاگ<i class="fa fa-angle-left mr-2"></i></a>#}
+                {#                        <a class="text-secondary mb-2" href="">گوشی ایفون<i class="fa fa-angle-left mr-2"></i></a>#}
+                {#                        <a class="text-secondary mb-2" href="#">ایپد<i class="fa fa-angle-left mr-2"></i></a>#}
+                {#                        <a class="text-secondary mb-2" href="#">گوشی سامسونگ<i class="fa fa-angle-left mr-2"></i></a>#}
+                {#                        <a class="text-secondary mb-2" href="#">لپتاپ<i class="fa fa-angle-left mr-2"></i></a>#}
+                {#                        <a class="text-secondary mb-2" href="#">کنسول بازی<i class="fa fa-angle-left mr-2"></i></a>#}
+                {#                    </div>#}
+                {#                </div>#}
+                
+                <div class="col-md-2 mb-3">
+                    <h5 class="text-secondary text-uppercase mb-5">با مولتی شاپ</h5>
+                    <div class="d-flex flex-column">
+                        <a class="text-secondary mb-2" href="#">مولتی شاپ در یک نگاه<i
+                                class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-2" href="#">خرید حضوری<i class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-2" href="#">تماس با ما<i class="fa fa-angle-left mr-2"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <h5 class="text-secondary text-uppercase mb-5">خدمات مشتریان</h5>
+                    <div class="d-flex flex-column">
+                        <a class="text-secondary mb-2" href="#">پاسخ به سوالات متداول<i
+                                class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-2" href="#">گارانتی<i class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-2" href="#">ارسال تیکت<i class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-2" href="#">تماس با پشتیبانی<i
+                                class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-2" href="#">گزارش باگ<i class="fa fa-angle-left mr-2"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <h5 class="text-secondary text-uppercase mb-5">پیش از خرید</h5>
+                    <div class="d-flex flex-column">
+                        <a class="text-secondary mb-2" href="#">راهنمای خرید اقساطی<i class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-2" href="#">راهنمای خرید از مولتی شاپ<i
+                                class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-2" href="#">روش های خرید از مولتی شاپ<i
+                                class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-4" href="#">شیوه ها و هزینه ارسال<i
+                                class="fa fa-angle-left mr-2"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-md-2 mb-3">
+                    <h5 class="text-secondary text-uppercase mb-5">پس از خرید</h5>
+                    <div class="d-flex flex-column">
+                        <a class="text-secondary mb-2" href="#">تضمین سلامت کالا<i
+                                class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-2" href="#">رویه بازگرداندن کالا<i
+                                class="fa fa-angle-left mr-2"></i></a>
+                        <a class="text-secondary mb-4" href="#">رهگیری سفارش<i class="fa fa-angle-left mr-2"></i></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="row d-flex justify-content-center border-top mx-xl-5 py-4"
+         style="border-color: rgba(255, 255, 255, .1) !important;">
+        <div class="d-flex col-md-6 px-xl-0 justify-content-center">
+            <h5 class="mx-2 text-secondary">1400 - 1403</h5>
+            <p class="mx-2 text-secondary">تمامی حقوق مادی و معنوی این سایت متعلق به مولتی شاپ می باشد.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Footer End -->
