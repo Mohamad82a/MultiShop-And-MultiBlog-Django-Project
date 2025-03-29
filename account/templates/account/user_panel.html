@@ -1,0 +1,143 @@
+{% load jformat %}
+{% load custom_filters %}
+{% load widget_tweaks %}
+{% load humanize %}
+{% load static %}
+{% load render_partial %}
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    {% include 'includes/head_reference.html' %}
+    {{ form.media }}
+    <style>
+        @media (max-width: 768px) {
+            .equal-size-link {
+                font-size: 14px;
+                padding: 10px;
+            }
+            .breadcrumb {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Topbar -->
+{% include 'includes/topbar.html' %}
+<!-- Topbar End -->
+
+<!-- Navbar -->
+{% render_partial 'product:navbar' %}
+<!-- End Navbar -->
+
+<!-- Breadcrumb Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+        <div class="col-12">
+            <nav class="breadcrumb bg-light mb-30">
+                <a class="text-link" href="{% url 'home:main' %}">مولتی شاپ</a>
+                <span class="breadcrumb-item mx-3">/</span>
+                <span class="active">پنل کاربر</span>
+            </nav>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<div class="container py-5">
+    <div class="row">
+        <!-- اطلاعات کاربر و منو کناری -->
+        <div class="col-lg-4 col-12 mb-4">
+            <div class="bg-light text-center p-4 rounded-2">
+                <h4 class="mb-2">{{ request.user.full_name }}</h4>
+                <h5 class="text-muted">{{ request.user.phone }}</h5>
+                <h6 class="text-muted">{{ request.user.email }}</h6>
+                <a class="btn btn-outline-dark btn-sm rounded" href="{% url 'account:edit_profile' request.user.id %}">ویرایش</a>
+            </div>
+            <div class="bg-light text-center p-4 mt-3 mb-3 rounded-2">
+                <a class="btn btn-outline-dark btn-sm mb-2 rounded d-flex justify-content-start align-items-center equal-size-link"
+                   href="{% url 'account:user_favorites' %}">
+                    <i class="far fa-heart text-dark-2 ml-2"></i> علاقه‌مندی‌ها
+                </a>
+                <a class="btn btn-outline-dark btn-sm mb-2 rounded d-flex justify-content-start align-items-center equal-size-link"
+                   href="{% url 'account:user_addresses' %}">
+                    <i class="bi bi-pin-map text-dark-2 ml-2"></i> آدرس‌ها
+                </a>
+                <a class="btn btn-outline-dark btn-sm mb-2 rounded d-flex justify-content-start align-items-center equal-size-link"
+                   href="{% url 'account:user_orders' %}">
+                    <i class="fa fa-shopping-cart text-dark-2 ml-2"></i> سفارش‌ها
+                </a>
+            </div>
+        </div>
+
+        <!-- محتوای اصلی پنل کاربری -->
+        <div class="col-lg-8 col-12">
+            {% block panel_content %}
+                <div class="row bg-light p-4 rounded-2">
+                    <div class="col-md-6 col-12 form-group">
+                        <label>نام و نام خانوادگی</label>
+                        <p class="form-control rounded">{{ user.full_name }}</p>
+                    </div>
+                    <div class="col-md-6 col-12 form-group">
+                        <label>شماره همراه</label>
+                        <p class="form-control rounded">{{ user.phone }}</p>
+                    </div>
+                    <div class="col-md-6 col-12 form-group">
+                        <label>آدرس ایمیل</label>
+                        <p class="form-control rounded">{{ user.email }}</p>
+                    </div>
+                    <div class="col-md-6 col-12 form-group">
+                        <label>کد ملی</label>
+                        <p class="form-control rounded">{{ user.melicode }}</p>
+                    </div>
+                </div>
+            {% endblock %}
+
+            {% block recent_orders %}
+                <div class="bg-light p-4 mt-4 rounded-2">
+                    <h5 class="mb-4">سفارش‌های اخیر</h5>
+                    {% if recent_orders %}
+                        <div class="d-flex flex-wrap">
+                            {% for order in recent_orders %}
+                                {% for order_item in order.order_items.all %}
+                                    <div class="product-item bg-white p-3 rounded-2 mt-2 w-100 d-md-flex align-items-center">
+                                        <img class="img-fluid" src="{{ order_item.product.images.all.first.image.url }}"
+                                             alt="{{ order_item.product.title }}" style="width: 80px; height: 80px;">
+                                        <div class="ml-md-3 mt-2 mt-md-0">
+                                            <h6 class="text-truncate">{{ order_item.product.title }}</h6>
+                                            <p class="text-muted mb-0">
+                                                {% if order_item.product.discount_price|intcomma:False %}
+                                                    {{ order_item.product.discount_price|intcomma:False }}
+                                                {% else %}
+                                                    {{ order_item.product.price|intcomma:False }}
+                                                {% endif %}
+                                            </p>
+                                            <p class="text-muted mb-0">{{ order.order_date|jformat:"%Y/%m/%d" }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="col">
+                            <span class="p-30">لیست سفارشات شما خالی است</span>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endblock %}
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+{% include 'includes/footer.html' %}
+<!-- End Footer -->
+
+<!-- Footer References -->
+{% include 'includes/footer_reference.html' %}
+<!-- Footer References End -->
+
+</body>
+</html>

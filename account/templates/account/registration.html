@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+
+    <style>
+        label {
+            text-align: right;
+            display: block;
+        }
+
+    </style>
+<!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="text-link" href="{% url 'home:main' %}">مولتی شاپ</a>
+                    <span class="breadcrumb-item mr-3 ml-3">/</span>
+                    <span class="active">ثبت نام کابر</span>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+
+    <!-- Checkout Start -->
+    <div class="container-fluid">
+        <div class="mr-auto">
+            <div class="">
+                <h5 class="section-title position-relative text-uppercase mb-3 text-right"><span class="bg-secondary pr-3">اطلاعات حساب کاربری</span></h5>
+                <div class="bg-light p-30 mb-5">
+                    {% if messages %}
+                        <div id="alert-message">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <form method="post" action="{% url 'account:registeration' %}">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label>نام و نام خانوادگی</label>
+                            {{ form.full_name|attr:"class:form-control rounded" }}
+                            {{ form.full_name.errors }}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>شماره همراه</label>
+                            {{ form.phone|attr:"class:form-control rounded" }}
+                            {{ form.phone.errors }}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>ادرس ایمیل</label>
+                            {{ form.email|attr:"class:form-control rounded" }}
+                            {{ form.email.errors }}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>کد ملی</label>
+                            {{ form.melicode|attr:"class:form-control rounded" }}
+                            {{ form.melicode.errors }}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>پسورد</label>
+                            {{ form.password1|attr:"class:form-control rounded" }}
+                            {{ form.password1.errors }}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            <label>تایید پسورد</label>
+                            {{ form.password2|attr:"class:form-control rounded" }}
+                            {{ form.password2.errors }}
+                        </div>
+                    </div>
+                        <button type="submit" class="form-control badge-success rounded">تایید و ثبت نام</button>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Checkout End -->
+
+
+{% endblock %}
