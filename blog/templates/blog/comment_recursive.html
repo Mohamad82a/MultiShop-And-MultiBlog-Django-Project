@@ -1,0 +1,97 @@
+{% load jformat %}
+
+{#{% if comments %}#}
+{#    <ul class="reply-list">#}
+{#        {% for reply in comments %}#}
+{#            <li class="reply">#}
+{#                <div class="right-content mb-3 mt-3">#}
+{#                    <h4>{{ reply.user.full_name }}<span#}
+{#                            class="pr-4">{{ reply.created_at|jformat:"%Y/%m/%d  %H:%M" }}</span>#}
+{#                    </h4>#}
+{#                    <span class="reply-to">در پاسخ به <span class="px-2">{{ reply.parent.user.full_name }}</span></span>#}
+{#                    <p>{{ reply.body }}</p>#}
+{#                    {% if request.user.is_authenticated %}#}
+{#                        <button onclick="set_value({{ reply.id }})"#}
+{#                                class="main-button-2 rounded">پاسخ#}
+{#                        </button>#}
+{#                    {% endif %}#}
+{#                </div>#}
+{##}
+{#                {% include "blog/comment_recursive.html" with comments=reply.replies.all %}#}
+{##}
+{#            </li>#}
+{#        {% endfor %}#}
+{#    </ul>#}
+{#{% endif %}#}
+
+
+{% if comments %}
+    <ul class="reply-list">
+        {% for reply in comments %}
+        <li class="reply">
+            <div class="right-content">
+                <h4>{{ reply.user.full_name }}<span
+                        class="pr-4">{{ reply.created_at|jformat:"%Y/%m/%d  %H:%M" }}</span>
+                </h4>
+                <span class="reply-to">در پاسخ به <span class="px-2">{{ reply.parent.user.full_name }}</span></span>
+                <p>{{ reply.body }}</p>
+                {% if request.user.is_authenticated %}
+                    <button onclick="set_value({{ reply.id }})"
+                            class="main-button-2 rounded">پاسخ</button>
+                {% endif %}
+
+                {% if reply.replies.all %}
+                    <button class="toggle-replies-btn" onclick="toggleReplies({{ reply.id }})">
+                        نمایش پاسخ‌ها ({{ reply.replies.count }})
+                    </button>
+                    <ul class="reply-list" id="reply-list-{{ reply.id }}" style="display: none;">
+                        {% include "blog/comment_recursive.html" with comments=reply.replies.all %}
+                    </ul>
+                {% endif %}
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endif %}
+
+
+{#responsive #}
+
+{% if comments %}
+    <ul class="reply-list list-unstyled">
+        {% for reply in comments %}
+        <li class="reply d-flex flex-column flex-md-row align-items-start">
+            <div class="right-content w-100">
+                <h4 class="d-flex flex-wrap justify-content-between align-items-center">
+                    <span class="font-weight-bold">{{ reply.user.full_name }}</span>
+                    <span class="text-muted small">{{ reply.created_at|jformat:"%Y/%m/%d %H:%M" }}</span>
+                </h4>
+
+                <span class="reply-to d-block text-secondary small">
+                    در پاسخ به <span class="font-weight-bold">{{ reply.parent.user.full_name }}</span>
+                </span>
+
+                <p class="mt-2">{{ reply.body }}</p>
+
+                {% if request.user.is_authenticated %}
+                    <button onclick="set_value({{ reply.id }})"
+                            class="btn btn-primary btn-sm rounded mt-2">پاسخ</button>
+                {% endif %}
+
+                {% if reply.replies.all %}
+                    <button class="btn btn-outline-secondary btn-sm mt-2"
+                            onclick="toggleReplies({{ reply.id }})">
+                        نمایش پاسخ‌ها ({{ reply.replies.count }})
+                    </button>
+
+                    <ul class="reply-list mt-2" id="reply-list-{{ reply.id }}" style="display: none;">
+                        {% include "blog/comment_recursive.html" with comments=reply.replies.all %}
+                    </ul>
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+{% endif %}
+

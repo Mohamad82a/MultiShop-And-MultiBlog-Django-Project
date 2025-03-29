@@ -1,0 +1,77 @@
+{% extends 'blog_base.html' %}
+{% load render_partial %}
+{% load static %}
+{% load jformat %}
+{% load custom_filters %}
+{% load humanize %}
+
+{% block blog_content %}
+
+    <section class="blog-posts grid-system">
+        <div class="container">
+            <div class="row">
+                {% render_partial 'blog:sidebar' %}
+                <div class="col-lg-8 mt-2 mb-2">
+                    <div class="all-blog-posts">
+                        <div class="row" style="display: flex; flex-wrap: wrap; align-items: stretch">
+                            {% for post in posts %}
+                                <div class="col-lg-6">
+                                    <div class="blog-post rounded-2" style="display: flex; flex-direction: column; height: 100%">
+                                        <div class="blog-thumb">
+                                            <img class="rounded" src="{{ post.images.all.first.image.url }}" alt="">
+                                        </div>
+                                        <div class="down-content" style="flex-grow: 1">
+                                            <span>{{ post.subcategory.title }}</span>
+                                            <a href="{{ post.get_absolute_url }}"><h4>{{ post.title }}</h4></a>
+                                            <ul class="post-info">
+                                                <li><a href="#">{{ post.author.full_name }}</a></li>
+                                                <li><a href="#">{{ post.date_published|jformat:"%Y/%m/%d" }}</a></li>
+                                            </ul>
+{#                                            <p>{{ post.body|truncatewords:50 }}</p>#}
+                                            <div class="post-options">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <ul class="post-tags">
+                                                            <li><i class="bi bi-chat-fill"></i></li>
+                                                            <li>{{ post.comments.all.count }}</li>
+                                                            <li>|</li>
+                                                            <li><i class="fa fa-heart"></i></li>
+                                                            <li>{{ post.likes.all.count }}</li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="col-lg-12 mt-5">
+                                {% if posts.has_other_pages %}
+                                    <ul class="page-numbers">
+                                    {% if posts.has_previous %}
+                                        <li><a class="rounded" href="?page={{ posts.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><i class="fa fa-angle-right"></i></a></li>
+                                    {% endif %}
+
+                                    {% for i in posts.paginator.page_range %}
+                                        {% if posts.number == i %}
+                                    	    <li class="active"><a class="rounded" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
+                                        {% else %}
+                                            <li><a class="rounded" href="?page={{ i }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ i }}</a></li>
+                                        {% endif %}
+
+                                    {% endfor %}
+
+                                    {% if posts.has_next %}
+                                        <li><a class="rounded" href="?page={{ posts.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"><i class="fa fa-angle-left"></i></a></li>
+                                    {% endif %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
