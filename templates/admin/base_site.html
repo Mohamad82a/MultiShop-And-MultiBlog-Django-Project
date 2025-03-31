@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+
+{% block title %}مدیریت فروشگاه{% endblock %}
+
+{% block branding %}
+<div id="site-name"><a href="{% url 'admin:index' %}">مدیریت فروشگاه</a></div>
+{% if user.is_anonymous %}
+  {% include "admin/color_theme_toggle.html" %}
+{% endif %}
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{#{{ site_header|default:_('Django administration') }}#}
