@@ -1,0 +1,96 @@
+{% load static %}
+
+<!-- Topbar Start -->
+<div class="container-fluid">
+    <!-- دسکتاپ -->
+    <div class="row align-items-center py-3 px-xl-5 d-none d-lg-flex">
+        <div class="col-lg-4">
+{#            <a href="{% url 'home:main' %}" class="text-decoration-none">#}
+{#                <span class="h1 text-uppercase text-primary bg-dark px-2 logo-background-1">Multi</span>#}
+{#                <span class="h1 text-uppercase text-dark bg-primary px-2 ml-n1 logo-background-2">Shop</span>#}
+{#            </a>#}
+            <a class="navbar-brand" href="{% url 'blog:home' %}"><h2>Multi Shop<em>.</em></h2></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+        <div class="col-lg-4 col-6">
+            <form action="{% url 'product:search' %}" method="get">
+                <div class="input-group">
+                    <div class="input-group-append ml-2">
+                        <button type="submit" class="border-0 rounded-2"><span class="input-group-text search-bar-bg text-primary rounded-2">
+                            <i class="fa fa-search"></i>
+                        </span></button>
+                        
+                    </div>
+                    <input type="text" class="form-control rounded-2 search-bar-bg" name="search" placeholder="جستجو">
+                </div>
+            </form>
+        </div>
+        <div class="col-lg-4 text-left">
+            <img src="{% static 'default_images/person-icon.png' %}" class="toolbar-icon" alt="User Icon">
+            <div class="btn-group">
+                {% if request.user.is_authenticated %}
+                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown"></button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'account:user_profile' %}">{{ request.user.full_name }}</a>
+                        <a class="dropdown-item" href="{% url 'account:signout' %}">خروج از حساب کاربری</a>
+                    </div>
+                {% else %}
+                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown"></button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" type="button" href="{% url 'account:signin' %}">ورود به حساب کاربری</a>
+                        <a class="dropdown-item" type="button" href="{% url 'account:signup' %}">ایجاد حساب کاربری</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- موبایل -->
+    <div class="row align-items-center py-3 px-xl-5 d-lg-none">
+        <div class="col-12 text-center mb-2">
+{#            <a href="{% url 'home:main' %}" class="text-decoration-none">#}
+{#                <span class="h2 text-uppercase text-primary bg-dark px-2 logo-background-1">Multi</span>#}
+{#                <span class="h2 text-uppercase text-dark bg-primary px-2 ml-n1 logo-background-2">Shop</span>#}
+{#            </a>#}
+            <a class="navbar-brand" href="{% url 'blog:home' %}"><h2>Multi Shop<em>.</em></h2></a>
+{#            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"#}
+{#                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">#}
+{#                <span class="navbar-toggler-icon"></span>#}
+{#            </button>#}
+        </div>
+        <div class="col-12">
+            <form action="">
+                <div class="input-group">
+                    <input type="text" class="form-control rounded-2 search-bar-bg" placeholder="جستجو">
+                    <div class="input-group-append">
+                        <span class="input-group-text search-bar-bg text-primary rounded-2">
+                            <i class="fa fa-search"></i>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-12 text-center mt-2">
+            <img src="{% static 'default_images/person-icon.png' %}" class="toolbar-icon" alt="User Icon">
+            <div class="btn-group">
+                {% if request.user.is_authenticated %}
+                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown"></button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" href="{% url 'account:user_profile' %}">{{ request.user.full_name }}</a>
+                        <a class="dropdown-item" href="{% url 'account:signout' %}">خروج از حساب کاربری</a>
+                    </div>
+                {% else %}
+                    <button type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown"></button>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a class="dropdown-item" type="button" href="{% url 'account:signin' %}">ورود به حساب کاربری</a>
+                        <a class="dropdown-item" type="button" href="{% url 'account:signup' %}">ایجاد حساب کاربری</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Topbar End -->
